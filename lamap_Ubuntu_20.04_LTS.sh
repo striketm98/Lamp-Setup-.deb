@@ -6,6 +6,7 @@ sudo apt-get install -y php php-tcpdf php-cgi php-pear php-mbstring libapache2-m
 sudo apt install php php-{cli,fpm,json,common,mysql,zip,gd,intl,mbstring,curl,xml,pear,tidy,soap,bcmath,xmlrpc}
 sudo apt install mariadb-server
 sudo mysql_secure_installation
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
 sudo mysql -u root -p123
 DATA="$(wget https://www.phpmyadmin.net/home_page/version.txt -q -O-)"
 URL="$(echo $DATA | cut -d ' ' -f 3)"
