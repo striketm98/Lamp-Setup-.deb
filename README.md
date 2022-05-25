@@ -4,33 +4,33 @@
 
 LAMP stack is the combination of the most frequently used software packages to build dynamic websites. LAMP is an abbreviation that uses the first letter of each of the packages included in it: Linux, Apache, MariaDB, and PHP.
 ******************************************LAMP(LINUX APACHE MYSQL PHP)*********************************************
-Installation of Lamp stack in Ubuntu 20.0.4 LTS(Server_Based) 
+# Installation of Lamp stack in Ubuntu 20.0.4 LTS(Server_Based) 
 *******************************************************************************************************************
-Specification : RAM 1GB HDD 10 GB 
+# Specification : RAM 1GB HDD 10 GB 
 *******************************************************
-Remote Host Using: Vs Code/Mobaxtreme
+# Remote Host Using: Vs Code/Mobaxtreme
 *******************************************************
-Cloud service Used: AWS
+# Cloud service Used: AWS
 ********************************************************
-Apache Installation:
+# Apache Installation:
 *********************************************************
 `sudo apt update`
 
 `sudo apt-get install apache2 -y`
 
-Php Installation with Packages:
+# Php Installation with Packages:
 *************************************************************
-`sudo apt-get install -y php php-tcpdf php-cgi php-pear php-mbstring libapache2-mod-php php-common php-phpseclib php-mysql
+`sudo apt-get install -y php php-tcpdf php-cgi php-pear php-mbstring libapache2-mod-php php-common php-phpseclib php-mysql`
 
 `sudo apt install php php-{cli,fpm,json,common,mysql,zip,gd,intl,mbstring,curl,xml,pear,tidy,soap,bcmath,xmlrpc}`
 
-Mysql Installation:
+# Mysql Installation:
 ****************************************************************
 `sudo apt install mariadb-server`
 
 `sudo mysql_secure_installation`
 
-`>>Enter current password for root (enter for none): Enter
+>>Enter current password for root (enter for none): Enter
 
 >>Set a root password? [Y/n] y
 
@@ -42,21 +42,21 @@ Mysql Installation:
 
 >>Reload privilege tables now? [Y/n] y
 
-sudo mysql -u root -p123
+`sudo mysql -u root -p`
+```
+CREATE DATABASE mydemo;
 
->>CREATE DATABASE mydemo;
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
 
->>CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON mydemo.* TO 'newuser'@'localhost';
 
->>GRANT ALL PRIVILEGES ON mydemo.* TO 'newuser'@'localhost';
-
->>QUIT`
-
+QUIT
+```
 `mysql -u newuser -password`
 
 >>###check_db######
 
-phpmyadmin Installation:
+# phpmyadmin Installation:
 ******************************************************************
 `DATA="$(wget https://www.phpmyadmin.net/home_page/version.txt -q -O-)"`
 
@@ -78,17 +78,20 @@ phpmyadmin Installation:
 
 `sudo cp /usr/share/phpmyadmin/config.sample.inc.php  /usr/share/phpmyadmin/config.inc.php`
 
-add two componet:
+# Add two componet:
 *******************************************************************
+***Firstly
+
 `sudo vim /usr/share/phpmyadmin/config.sample.inc.php`
 
   `$cfg['blowfish_secret'] = 'H2OxcGXxflSd8JwrwVlh6KW6s2rER63i';`
 
   `$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';`
 
+***Secondly,
 
 `sudo vim /etc/apache2/conf-enabled/phpmyadmin.conf`
-**************************add it*************************************
+```
 Alias /phpmyadmin /usr/share/phpmyadmin
 
 <Directory /usr/share/phpmyadmin>
@@ -124,7 +127,7 @@ Alias /phpmyadmin /usr/share/phpmyadmin
 
 </Directory>
 
-# Authorize for setup
+#Authorize for setup
 <Directory /usr/share/phpmyadmin/setup>
     <IfModule mod_authz_core.c>
         <IfModule mod_authn_file.c>
@@ -136,7 +139,7 @@ Alias /phpmyadmin /usr/share/phpmyadmin
     </IfModule>
 </Directory>
 
-# Disallow web access to directories that don't need it
+#Disallow web access to directories that don't need it
 <Directory /usr/share/phpmyadmin/templates>
     Require all denied
 </Directory>
@@ -146,8 +149,8 @@ Alias /phpmyadmin /usr/share/phpmyadmin
 <Directory /usr/share/phpmyadmin/setup/lib>
     Require all denied
 </Directory>
-
-Restart apache2 server:
+```
+# Restart apache2 server:
 ****************************************************************
 ```
 sudo systemctl restart apache2
@@ -155,12 +158,12 @@ sudo systemctl restart apache2
 sudo systemctl restart mysql
 ```
 
-Permission Change:
+# Permission Change:
 ******************************************************************
 
 `sudo chown -R www-data:www-data /var/www/html/;sudo chmod -R 755 /var/www/html/`
 
-open-ssl Installation:
+# Open-ssl Installation:
 ******************************************************************
 ```
 sudo lsb_release -a
@@ -168,7 +171,7 @@ sudo lsb_release -a
 sudo a2enmod ssl
 
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/server.yourdomain.com.key -out /etc/ssl/certs/server.yourdomain.com.crt
-
+```
 >>Country Name (2 letter code) [AU]:
 
 >>State or Province Name (full name) [Some-State]:
@@ -182,12 +185,11 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/privat
 >>Common Name (e.g. server FQDN or YOUR name) []: 13.126.208.136
 
 Email Address []: 
-```
+
+# .conf file add it as per DNS
 
 `sudo vim /etc/apache2/sites-available/clubmaster.conf`  
 
-
-***********************************************add it****************************************
 ```
 <VirtualHost *:80>
      ServerName 13.126.208.136
@@ -233,8 +235,8 @@ Email Address []:
 
 ```
 
+# Reload All Services
 
-***************Reload all services**************************************
 ```sudo a2dismod mpm_event
 
 sudo a2enmod mpm_prefork
