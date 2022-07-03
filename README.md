@@ -1,17 +1,11 @@
 # Lamp-Setup-Ubuntu-20-04-LTS
 
+![lamp](https://user-images.githubusercontent.com/65080702/177030709-5c165df5-adbf-4995-9faa-3aaff2ac4a68.png)
+
+
 
 
 LAMP stack is the combination of the most frequently used software packages to build dynamic websites. LAMP is an abbreviation that uses the first letter of each of the packages included in it: Linux, Apache, MariaDB, and PHP.
-******************************************LAMP(LINUX APACHE MYSQL PHP)*********************************************
-# Installation of Lamp stack in Ubuntu 20.0.4 LTS(Server_Based) 
-*******************************************************************************************************************
-# Specification : RAM 1GB HDD 10 GB 
-*******************************************************
-# Remote Host Using: Vs Code/Mobaxtreme
-*******************************************************
-# Cloud service Used: AWS
-********************************************************
 # Apache Installation:
 *********************************************************
 `sudo apt update`
