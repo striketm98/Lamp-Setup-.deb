@@ -18,10 +18,10 @@ sudo mv phpMyAdmin-*/ /usr/share/phpmyadmin
 sudo mkdir -p /var/lib/phpmyadmin/tmp;sudo chown -R www-data:www-data /var/lib/phpmyadmin;
 sudo mkdir /etc/phpmyadmin/
 sudo cp /usr/share/phpmyadmin/config.sample.inc.php  /usr/share/phpmyadmin/config.inc.php
-sudo tee /usr/share/phpmyadmin/config.inc.php << EOF
+sudo vim /usr/share/phpmyadmin/config.inc.php 
 	$cfg['blowfish_secret'] = 'H2OxcGXxflSd8JwrwVlh6KW6s2rER63i';
 	$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';
-EOF
+
 sudo tee /etc/apache2/conf-enabled/phpmyadmin.conf <<EOF
 
 Alias /phpmyadmin /usr/share/phpmyadmin
