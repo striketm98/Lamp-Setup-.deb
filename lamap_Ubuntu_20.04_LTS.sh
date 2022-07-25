@@ -29,6 +29,9 @@ Alias /phpmyadmin /usr/share/phpmyadmin
 <Directory /usr/share/phpmyadmin>
     Options SymLinksIfOwnerMatch
     DirectoryIndex index.php
+    Order Allow,Deny
+    Allow from 127.0.0.1
+    Allow form 192.168.29.178
 
     <IfModule mod_php5.c>
         <IfModule mod_mime.c>
