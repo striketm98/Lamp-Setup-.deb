@@ -2,54 +2,54 @@
 
 ![lamp](https://user-images.githubusercontent.com/65080702/177030709-5c165df5-adbf-4995-9faa-3aaff2ac4a68.png)
 
-
-
-
 LAMP stack is the combination of the most frequently used software packages to build dynamic websites. LAMP is an abbreviation that uses the first letter of each of the packages included in it: Linux, Apache, MariaDB, and PHP.
+
 # Apache Installation:
 *********************************************************
-`sudo apt update`
-
-`sudo apt-get install apache2 -y`
+```
+sudo apt update
+sudo apt-get install apache2 -y
+```
 
 # Php Installation with Packages:
 *************************************************************
-`sudo apt-get install -y php php-tcpdf php-cgi php-pear php-mbstring libapache2-mod-php php-common php-phpseclib php-mysql`
+```
+sudo apt-get install -y php php-tcpdf php-cgi php-pear php-mbstring libapache2-mod-php php-common php-phpseclib php-mysql
 
-`sudo apt install php php-{cli,fpm,json,common,mysql,zip,gd,intl,mbstring,curl,xml,pear,tidy,soap,bcmath,xmlrpc}`
-
+sudo apt install php php-{cli,fpm,json,common,mysql,zip,gd,intl,mbstring,curl,xml,pear,tidy,soap,bcmath,xmlrpc}
+```
 # Mysql Installation:
 ****************************************************************
-`sudo apt install mariadb-server`
+```
+sudo apt install mariadb-server
 
-`sudo mysql_secure_installation`
+sudo mysql_secure_installation
+```
+Enter current password for root (enter for none): Enter
 
->>Enter current password for root (enter for none): Enter
+Set a root password? [Y/n] y
 
->>Set a root password? [Y/n] y
+Remove anonymous users? [Y/n] y
 
->>Remove anonymous users? [Y/n] y
+Disallow root login remotely? [Y/n] y
 
->>Disallow root login remotely? [Y/n] y
+Remove test database and access to it? [Y/n] y
 
->>Remove test database and access to it? [Y/n] y
-
->>Reload privilege tables now? [Y/n] y
+Reload privilege tables now? [Y/n] y
 
 `sudo mysql -u root -p`
 ```
-CREATE DATABASE mydemo;
+>CREATE DATABASE mydemo;
 
-CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+>CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
 
-GRANT ALL PRIVILEGES ON mydemo.* TO 'newuser'@'localhost';
+>GRANT ALL PRIVILEGES ON mydemo.* TO 'newuser'@'localhost';
 
-QUIT
+>QUIT
 ```
-`mysql -u newuser -password`
-
->>###check_db######
-
+# check the databae the database
+`mysql -u <newuser> -p<password>`
+ 
 # phpmyadmin Installation:
 ******************************************************************
 `DATA="$(wget https://www.phpmyadmin.net/home_page/version.txt -q -O-)"`
