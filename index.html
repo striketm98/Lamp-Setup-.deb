@@ -1,0 +1,192 @@
+<h1 id="lamp-setup-ubuntu-20-04-lts">Lamp-Setup-Ubuntu-20-04-LTS</h1>
+<p><img src="https://user-images.githubusercontent.com/65080702/177030709-5c165df5-adbf-4995-9faa-3aaff2ac4a68.png" alt="lamp"></p>
+<p>LAMP stack is the combination of the most frequently used software packages to build dynamic websites. LAMP is an abbreviation that uses the first letter of each of the packages included in it: Linux, Apache, MariaDB, and PHP.</p>
+<h1 id="apache-installation-">Apache Installation:</h1>
+<hr>
+<pre><code>sudo apt <span class="hljs-keyword">update</span>
+sudo apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">install</span> apache2 -y
+</code></pre><h1 id="php-installation-with-packages-">Php Installation with Packages:</h1>
+<hr>
+<pre><code>sudo apt-get <span class="hljs-keyword">install</span> -y php php-tcpdf php-cgi php-pear php-mbstring libapache2-<span class="hljs-keyword">mod</span>-php php-common php-phpseclib php-mysql
+
+sudo apt <span class="hljs-keyword">install</span> php php-{cli,fpm,<span class="hljs-keyword">json</span>,common,mysql,zip,gd,intl,mbstring,curl,<span class="hljs-keyword">xml</span>,pear,tidy,soap,bcmath,xmlrpc}
+</code></pre><h1 id="mysql-installation-">Mysql Installation:</h1>
+<hr>
+<pre><code>sudo apt <span class="hljs-keyword">install</span> mariadb-<span class="hljs-keyword">server</span>
+
+sudo mysql_secure_installation
+</code></pre><p>Enter current password for root (enter for none): Enter</p>
+<p>Set a root password? [Y/n] y</p>
+<p>Remove anonymous users? [Y/n] y</p>
+<p>Disallow root login remotely? [Y/n] y</p>
+<p>Remove test database and access to it? [Y/n] y</p>
+<p>Reload privilege tables now? [Y/n] y</p>
+<p><code>sudo mysql -u root -p</code></p>
+<pre><code>&gt;<span class="hljs-keyword">CREATE</span> DATABASE mydemo;
+
+&gt;<span class="hljs-keyword">CREATE</span> USER <span class="hljs-string">'newuser'</span>@<span class="hljs-string">'localhost'</span> IDENTIFIED <span class="hljs-keyword">BY</span> <span class="hljs-string">'password'</span>;
+
+&gt;GRANT ALL PRIVILEGES <span class="hljs-keyword">ON</span> mydemo.* <span class="hljs-keyword">TO</span> <span class="hljs-string">'newuser'</span>@<span class="hljs-string">'localhost'</span>;
+
+&gt;QUIT
+</code></pre><h1 id="check-the-databae-the-database">check the databae the database</h1>
+<p><code>mysql -u &lt;newuser&gt; -p&lt;password&gt;</code></p>
+<h1 id="phpmyadmin-installation-">phpmyadmin Installation:</h1>
+<hr>
+<p><code>DATA=&quot;$(wget https://www.phpmyadmin.net/home_page/version.txt -q -O-)&quot;</code></p>
+<p><code>URL=&quot;$(echo $DATA | cut -d &#39; &#39; -f 3)&quot;</code></p>
+<p><code>VERSION=&quot;$(echo $DATA | cut -d &#39; &#39; -f 1)&quot;</code></p>
+<p><code>wget https://files.phpmyadmin.net/phpMyAdmin/${VERSION}/phpMyAdmin-${VERSION}-all-languages.tar.gz</code></p>
+<p><code>wget https://files.phpmyadmin.net/phpMyAdmin/${VERSION}/phpMyAdmin-${VERSION}-english.tar.gz</code></p>
+<p><code>tar xvf phpMyAdmin-${VERSION}-all-languages.tar.gz</code></p>
+<p><code>sudo mv phpMyAdmin-*/ /usr/share/phpmyadmin</code></p>
+<p><code>sudo mkdir -p /var/lib/phpmyadmin/tmp;sudo chown -R www-data:www-data /var/lib/phpmyadmin;</code></p>
+<p><code>sudo mkdir /etc/phpmyadmin/</code></p>
+<p><code>sudo cp /usr/share/phpmyadmin/config.sample.inc.php  /usr/share/phpmyadmin/config.inc.php</code></p>
+<h1 id="add-two-componet-">Add two componet:</h1>
+<hr>
+<p><em>*</em>Firstly</p>
+<p><code>sudo vim /usr/share/phpmyadmin/config.sample.inc.php</code></p>
+<p>  <code>$cfg[&#39;blowfish_secret&#39;] = &#39;H2OxcGXxflSd8JwrwVlh6KW6s2rER63i&#39;;</code></p>
+<p>  <code>$cfg[&#39;TempDir&#39;] = &#39;/var/lib/phpmyadmin/tmp&#39;;</code></p>
+<p><em>*</em>Secondly,</p>
+<p><code>sudo vim /etc/apache2/conf-enabled/phpmyadmin.conf</code></p>
+<pre><code>Alias /phpmyadmin /usr/share/phpmyadmin
+
+&lt;Directory /usr/share/phpmyadmin&gt;
+    Options SymLinksIfOwnerMatch
+    DirectoryIndex index.php
+
+    &lt;IfModule mod_php5.c&gt;
+        &lt;IfModule mod_mime.c&gt;
+            AddType application/x-httpd-php .php
+        &lt;<span class="hljs-regexp">/IfModule&gt;
+        &lt;FilesMatch ".+\.php$"&gt;
+            SetHandler application/x</span>-httpd-php
+        &lt;<span class="hljs-regexp">/FilesMatch&gt;
+
+        php_value include_path .
+        php_admin_value upload_tmp_dir /var</span><span class="hljs-regexp">/lib/phpmyadmin</span><span class="hljs-regexp">/tmp
+        php_admin_value open_basedir /usr</span><span class="hljs-regexp">/share/phpmyadmin</span><span class="hljs-regexp">/:/etc</span><span class="hljs-regexp">/phpmyadmin/</span>:<span class="hljs-regexp">/var/lib</span><span class="hljs-regexp">/phpmyadmin/</span>:<span class="hljs-regexp">/usr/share</span><span class="hljs-regexp">/php/php</span>-gettext/:<span class="hljs-regexp">/usr/share</span><span class="hljs-regexp">/php/php</span>-php-gettext/:<span class="hljs-regexp">/usr/share</span><span class="hljs-regexp">/javascript/</span>:<span class="hljs-regexp">/usr/share</span><span class="hljs-regexp">/php/tcpdf</span><span class="hljs-regexp">/:/usr</span><span class="hljs-regexp">/share/doc</span><span class="hljs-regexp">/phpmyadmin/</span>:<span class="hljs-regexp">/usr/share</span><span class="hljs-regexp">/php/phpseclib</span><span class="hljs-regexp">/
+        php_admin_value mbstring.func_overload 0
+    &lt;/</span>IfModule&gt;
+    &lt;IfModule mod_php.c&gt;
+        &lt;IfModule mod_mime.c&gt;
+            AddType application/x-httpd-php .php
+        &lt;<span class="hljs-regexp">/IfModule&gt;
+        &lt;FilesMatch ".+\.php$"&gt;
+            SetHandler application/x</span>-httpd-php
+        &lt;<span class="hljs-regexp">/FilesMatch&gt;
+
+        php_value include_path .
+        php_admin_value upload_tmp_dir /var</span><span class="hljs-regexp">/lib/phpmyadmin</span><span class="hljs-regexp">/tmp
+        php_admin_value open_basedir /usr</span><span class="hljs-regexp">/share/phpmyadmin</span><span class="hljs-regexp">/:/etc</span><span class="hljs-regexp">/phpmyadmin/</span>:<span class="hljs-regexp">/var/lib</span><span class="hljs-regexp">/phpmyadmin/</span>:<span class="hljs-regexp">/usr/share</span><span class="hljs-regexp">/php/php</span>-gettext/:<span class="hljs-regexp">/usr/share</span><span class="hljs-regexp">/php/php</span>-php-gettext/:<span class="hljs-regexp">/usr/share</span><span class="hljs-regexp">/javascript/</span>:<span class="hljs-regexp">/usr/share</span><span class="hljs-regexp">/php/tcpdf</span><span class="hljs-regexp">/:/usr</span><span class="hljs-regexp">/share/doc</span><span class="hljs-regexp">/phpmyadmin/</span>:<span class="hljs-regexp">/usr/share</span><span class="hljs-regexp">/php/phpseclib</span><span class="hljs-regexp">/
+        php_admin_value mbstring.func_overload 0
+    &lt;/</span>IfModule&gt;
+
+&lt;<span class="hljs-regexp">/Directory&gt;
+
+#Authorize for setup
+&lt;Directory /usr</span><span class="hljs-regexp">/share/phpmyadmin</span><span class="hljs-regexp">/setup&gt;
+    &lt;IfModule mod_authz_core.c&gt;
+        &lt;IfModule mod_authn_file.c&gt;
+            AuthType Basic
+            AuthName "phpMyAdmin Setup"
+            AuthUserFile /etc</span><span class="hljs-regexp">/phpmyadmin/htpasswd</span>.setup
+        &lt;<span class="hljs-regexp">/IfModule&gt;
+        Require valid-user
+    &lt;/</span>IfModule&gt;
+&lt;<span class="hljs-regexp">/Directory&gt;
+
+#Disallow web access to directories that don't need it
+&lt;Directory /usr</span><span class="hljs-regexp">/share/phpmyadmin</span><span class="hljs-regexp">/templates&gt;
+    Require all denied
+&lt;/</span>Directory&gt;
+&lt;Directory /usr/share/phpmyadmin/libraries&gt;
+    Require all denied
+&lt;<span class="hljs-regexp">/Directory&gt;
+&lt;Directory /usr</span><span class="hljs-regexp">/share/phpmyadmin</span><span class="hljs-regexp">/setup/lib</span>&gt;
+    Require all denied
+&lt;<span class="hljs-regexp">/Directory&gt;</span>
+</code></pre><h1 id="restart-apache2-server-">Restart apache2 server:</h1>
+<hr>
+<pre><code>sudo systemctl <span class="hljs-built_in">restart</span> apache2
+
+sudo systemctl <span class="hljs-built_in">restart</span> mysql
+</code></pre><h1 id="permission-change-">Permission Change:</h1>
+<hr>
+<p><code>sudo chown -R www-data:www-data /var/www/html/;sudo chmod -R 755 /var/www/html/</code></p>
+<h1 id="open-ssl-installation-">Open-ssl Installation:</h1>
+<hr>
+<pre><code>sudo lsb_release -<span class="hljs-selector-tag">a</span>
+
+sudo a2enmod ssl
+
+sudo openssl req -x509 -nodes -days <span class="hljs-number">365</span> -newkey rsa:<span class="hljs-number">2048</span> -keyout /etc/ssl/private/server<span class="hljs-selector-class">.yourdomain</span><span class="hljs-selector-class">.com</span><span class="hljs-selector-class">.key</span> -out /etc/ssl/certs/server<span class="hljs-selector-class">.yourdomain</span><span class="hljs-selector-class">.com</span><span class="hljs-selector-class">.crt</span>
+</code></pre><blockquote>
+<blockquote>
+<p>Country Name (2 letter code) [AU]:</p>
+<p>State or Province Name (full name) [Some-State]:</p>
+<p>Locality Name (eg, city) []:</p>
+<p>Organization Name (eg, company) [Internet Widgits Pty Ltd]:</p>
+<p>Organizational Unit Name (eg, section) []:</p>
+<p>Common Name (e.g. server FQDN or YOUR name) []: 13.126.208.136</p>
+</blockquote>
+</blockquote>
+<p>Email Address []: </p>
+<h1 id="-conf-file-add-it-as-per-dns">.conf file add it as per DNS</h1>
+<p><code>sudo vim /etc/apache2/sites-available/clubmaster.conf</code>  </p>
+<pre><code><span class="hljs-section">&lt;VirtualHost *:80&gt;</span>
+     <span class="hljs-attribute"><span class="hljs-nomarkup">ServerName</span></span> 13.126.208.136
+     <span class="hljs-attribute">ServerAlias</span> 13.126.208.136
+     <span class="hljs-attribute">ServerAdmin</span> admin@13.126.208.136
+     <span class="hljs-attribute"><span class="hljs-nomarkup">DocumentRoot</span></span> /var/www/html/Club-Manager/
+     <span class="hljs-attribute">Redirect</span> / https://13.126.208.136
+     <span class="hljs-attribute">CustomLog</span> <span class="hljs-variable">${APACHE_LOG_DIR}</span>/access.log combined
+     <span class="hljs-attribute">ErrorLog</span> <span class="hljs-variable">${APACHE_LOG_DIR}</span>/error.log
+
+      <span class="hljs-section">&lt;Directory /var/www/html/clubmanager&gt;</span>
+            <span class="hljs-attribute"><span class="hljs-nomarkup">Options</span></span> Indexes FollowSymLinks
+            <span class="hljs-attribute">AllowOverride</span> <span class="hljs-literal">All</span>
+            <span class="hljs-attribute">Require</span> <span class="hljs-literal">all</span> granted
+            <span class="hljs-attribute"><span class="hljs-nomarkup">RewriteEngine</span></span> <span class="hljs-literal">on</span>
+            <span class="hljs-attribute">RewriteBase</span> /
+            <span class="hljs-attribute"><span class="hljs-nomarkup">RewriteCond</span></span> <span class="hljs-variable">%{REQUEST_FILENAME}</span> !-f
+            <span class="hljs-attribute"><span class="hljs-nomarkup">RewriteCond</span></span> <span class="hljs-variable">%{REQUEST_FILENAME}</span> !-d
+            <span class="hljs-attribute"><span class="hljs-nomarkup">RewriteRule</span></span> ^(.*)$ index.php?q=<span class="hljs-number">$1</span><span class="hljs-meta"> [L,QSA]</span>
+   <span class="hljs-section">&lt;/Directory&gt;</span>
+<span class="hljs-section">&lt;/VirtualHost&gt;</span>
+<span class="hljs-section">&lt;VirtualHost *:443&gt;</span>
+     <span class="hljs-attribute"><span class="hljs-nomarkup">ServerName</span></span> 13.126.208.136
+     <span class="hljs-attribute">ServerAlias</span> 13.126.208.136
+     <span class="hljs-attribute">ServerAdmin</span> admin@13.126.208.136
+     <span class="hljs-attribute"><span class="hljs-nomarkup">DocumentRoot</span></span> /var/www/html/Club-Manager/
+     <span class="hljs-attribute">SSLEngine</span> <span class="hljs-literal">on</span>
+     <span class="hljs-attribute">SSLCertificateKeyFile</span> /etc/ssl/private/server.yourdomain.com.key
+     <span class="hljs-attribute">SSLCertificateFile</span> /etc/ssl/certs/server.yourdomain.com.crt
+     <span class="hljs-attribute">CustomLog</span> <span class="hljs-variable">${APACHE_LOG_DIR}</span>/access.log combined
+     <span class="hljs-attribute">ErrorLog</span> <span class="hljs-variable">${APACHE_LOG_DIR}</span>/error.log
+      <span class="hljs-section">&lt;Directory /var/www/html/clubmanager&gt;</span>
+            <span class="hljs-attribute"><span class="hljs-nomarkup">Options</span></span> Indexes FollowSymLinks
+            <span class="hljs-attribute">AllowOverride</span> <span class="hljs-literal">All</span>
+            <span class="hljs-attribute">Require</span> <span class="hljs-literal">all</span> granted
+            <span class="hljs-attribute"><span class="hljs-nomarkup">RewriteEngine</span></span> <span class="hljs-literal">on</span>
+            <span class="hljs-attribute">RewriteBase</span> /
+            <span class="hljs-attribute"><span class="hljs-nomarkup">RewriteCond</span></span> <span class="hljs-variable">%{REQUEST_FILENAME}</span> !-f
+            <span class="hljs-attribute"><span class="hljs-nomarkup">RewriteCond</span></span> <span class="hljs-variable">%{REQUEST_FILENAME}</span> !-d
+            <span class="hljs-attribute"><span class="hljs-nomarkup">RewriteRule</span></span> ^(.*)$ index.php?q=<span class="hljs-number">$1</span><span class="hljs-meta"> [L,QSA]</span>
+   <span class="hljs-section">&lt;/Directory&gt;</span>
+<span class="hljs-section">&lt;/VirtualHost&gt;</span>
+</code></pre><h1 id="reload-all-services">Reload All Services</h1>
+<pre><code><span class="hljs-selector-tag">sudo</span> <span class="hljs-selector-tag">a2dismod</span> <span class="hljs-selector-tag">mpm_event</span>
+
+<span class="hljs-selector-tag">sudo</span> <span class="hljs-selector-tag">a2enmod</span> <span class="hljs-selector-tag">mpm_prefork</span>
+
+<span class="hljs-selector-tag">sudo</span> <span class="hljs-selector-tag">sudo</span> <span class="hljs-selector-tag">a2enmod</span> <span class="hljs-selector-tag">php7</span><span class="hljs-selector-class">.4</span>
+
+<span class="hljs-selector-tag">sudo</span> <span class="hljs-selector-tag">a2enmod</span> <span class="hljs-selector-tag">rewrite</span>
+
+<span class="hljs-selector-tag">sudo</span> <span class="hljs-selector-tag">a2ensite</span> <span class="hljs-selector-tag">clubmaster</span><span class="hljs-selector-class">.conf</span>
+
+<span class="hljs-selector-tag">sudo</span> <span class="hljs-selector-tag">systemctl</span> <span class="hljs-selector-tag">reload</span> <span class="hljs-selector-tag">apache2</span>
+</code></pre>
