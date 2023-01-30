@@ -25,17 +25,17 @@ sudo apt install mariadb-server
 
 sudo mysql_secure_installation
 ```
-Enter current password for root (enter for none): Enter
+>> Enter current password for root (enter for none): Enter
 
-Set a root password? [Y/n] y
+>> Set a root password? [Y/n] y
 
-Remove anonymous users? [Y/n] y
+>> Remove anonymous users? [Y/n] y
 
-Disallow root login remotely? [Y/n] y
+>> Disallow root login remotely? [Y/n] y
 
-Remove test database and access to it? [Y/n] y
+>> Remove test database and access to it? [Y/n] y
 
-Reload privilege tables now? [Y/n] y
+>> Reload privilege tables now? [Y/n] y
 
 `sudo mysql -u root -p`
 ```
@@ -178,7 +178,7 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/privat
 
 >>Common Name (e.g. server FQDN or YOUR name) []: 13.126.208.136
 
-Email Address []: 
+>>Email Address []:admin@mail.com 
 
 # .conf file add it as per DNS
 
