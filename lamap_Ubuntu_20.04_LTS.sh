@@ -8,6 +8,7 @@ sudo apt install mariadb-server
 sudo mysql_secure_installation
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
 sudo mysql -u root -p123
+
 DATA="$(wget https://www.phpmyadmin.net/home_page/version.txt -q -O-)"
 URL="$(echo $DATA | cut -d ' ' -f 3)"
 VERSION="$(echo $DATA | cut -d ' ' -f 1)"
