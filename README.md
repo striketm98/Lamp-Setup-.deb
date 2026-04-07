@@ -3,12 +3,13 @@ This professional documentation format enhances readability and maintains a clea
 ```markdown
 # 🌐 Enterprise LAMP Stack Deployment (Ubuntu 20.04 LTS)
 
-![Security Verified](https://img.shields.io/badge/Security-Hardened-success?style=for-the-badge&logo=arm)
-![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
-![Apache](https://img.shields.io/badge/Apache-D22128?style=for-the-badge&logo=apache&logoColor=white)
-![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+[![Security Hardened](https://img.shields.io/badge/Security-Hardened-brightgreen?style=for-the-badge&logo=shield-halved)](https://github.com/striketm98)
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com)
+[![Apache](https://img.shields.io/badge/Apache-D22128?style=for-the-badge&logo=apache&logoColor=white)](https://httpd.apache.org/)
+[![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)](https://mariadb.org/)
+[![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
 
+---
 A comprehensive guide to deploying a high-performance **LAMP (Linux, Apache, MariaDB, PHP)** stack, featuring SSL/TLS hardening, secure database orchestration, and manual phpMyAdmin integration.
 
 ---
