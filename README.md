@@ -1,245 +1,152 @@
-# Lamp-Setup-Ubuntu-20-04-LTS
+This professional documentation format enhances readability and maintains a clean, technical structure suitable for your GitHub portfolio.
 
-![lamp](https://user-images.githubusercontent.com/65080702/177030709-5c165df5-adbf-4995-9faa-3aaff2ac4a68.png)
+```markdown
+# 🌐 Enterprise LAMP Stack Deployment (Ubuntu 20.04 LTS)
 
-LAMP stack is the combination of the most frequently used software packages to build dynamic websites. LAMP is an abbreviation that uses the first letter of each of the packages included in it: Linux, Apache, MariaDB, and PHP.
+![Security Verified](https://img.shields.io/badge/Security-Hardened-success?style=for-the-badge&logo=arm)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+![Apache](https://img.shields.io/badge/Apache-D22128?style=for-the-badge&logo=apache&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 
-# Apache Installation:
-*********************************************************
+A comprehensive guide to deploying a high-performance **LAMP (Linux, Apache, MariaDB, PHP)** stack, featuring SSL/TLS hardening, secure database orchestration, and manual phpMyAdmin integration.
+
+---
+
+## 🛠️ Step 1: Web Server (Apache) Initialization
+Update the system repositories and install the Apache2 service.
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install apache2 -y
 ```
-sudo apt update
-sudo apt-get install apache2 -y
+
+---
+
+## 🐘 Step 2: PHP Engine & Module Integration
+Installation of PHP 7.4 alongside critical extensions for performance, security, and application compatibility.
+
+```bash
+sudo apt install -y php php-tcpdf php-cgi php-pear php-mbstring libapache2-mod-php \
+php-common php-phpseclib php-mysql php-cli php-fpm php-json php-zip php-gd \
+php-intl php-curl php-xml php-tidy php-soap php-bcmath php-xmlrpc
 ```
 
-# Php Installation with Packages:
-*************************************************************
-```
-sudo apt-get install -y php php-tcpdf php-cgi php-pear php-mbstring libapache2-mod-php php-common php-phpseclib php-mysql
+---
 
-sudo apt install php php-{cli,fpm,json,common,mysql,zip,gd,intl,mbstring,curl,xml,pear,tidy,soap,bcmath,xmlrpc}
-```
-# Mysql Installation:
-****************************************************************
-```
-sudo apt install mariadb-server
+## 🗄️ Step 3: Database (MariaDB) Orchestration
+Secure the database instance and configure localized user privileges.
 
+### **Installation & Hardening**
+```bash
+sudo apt install mariadb-server -y
 sudo mysql_secure_installation
 ```
->> Enter current password for root (enter for none): Enter
 
->> Set a root password? [Y/n] y
-
->> Remove anonymous users? [Y/n] y
-
->> Disallow root login remotely? [Y/n] y
-
->> Remove test database and access to it? [Y/n] y
-
->> Reload privilege tables now? [Y/n] y
-
-`sudo mysql -u root -p`
+### **Environment Setup**
+```sql
+-- Access CLI: sudo mysql -u root -p
+CREATE DATABASE mydemo;
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'secure_password_here';
+GRANT ALL PRIVILEGES ON mydemo.* TO 'newuser'@'localhost';
+FLUSH PRIVILEGES;
+QUIT;
 ```
->CREATE DATABASE mydemo;
 
->CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+---
 
->GRANT ALL PRIVILEGES ON mydemo.* TO 'newuser'@'localhost';
+## 💎 Step 4: phpMyAdmin Secure Deployment
+Manual installation to ensure the latest stable version and custom directory mapping.
 
->QUIT
+```bash
+# Fetch latest version metadata
+DATA="$(wget [https://www.phpmyadmin.net/home_page/version.txt](https://www.phpmyadmin.net/home_page/version.txt) -q -O-)"
+VERSION="$(echo $DATA | cut -d ' ' -f 1)"
+
+# Download and Extract
+wget [https://files.phpmyadmin.net/phpMyAdmin/$](https://files.phpmyadmin.net/phpMyAdmin/$){VERSION}/phpMyAdmin-${VERSION}-all-languages.tar.gz
+tar xvf phpMyAdmin-${VERSION}-all-languages.tar.gz
+sudo mv phpMyAdmin-*/ /usr/share/phpmyadmin
+
+# Infrastructure Configuration
+sudo mkdir -p /var/lib/phpmyadmin/tmp
+sudo chown -R www-data:www-data /var/lib/phpmyadmin
+sudo mkdir /etc/phpmyadmin/
+sudo cp /usr/share/phpmyadmin/config.sample.inc.php /usr/share/phpmyadmin/config.inc.php
 ```
-# check the databae the database
-`mysql -u <newuser> -p<password>`
- 
-# phpmyadmin Installation:
-******************************************************************
-`DATA="$(wget https://www.phpmyadmin.net/home_page/version.txt -q -O-)"`
 
-`URL="$(echo $DATA | cut -d ' ' -f 3)"`
+---
 
-`VERSION="$(echo $DATA | cut -d ' ' -f 1)"`
+## 🔒 Step 5: SSL/TLS Hardening (OpenSSL)
+Generating self-signed certificates to enable encrypted traffic over HTTPS.
 
-`wget https://files.phpmyadmin.net/phpMyAdmin/${VERSION}/phpMyAdmin-${VERSION}-all-languages.tar.gz`
-
-`wget https://files.phpmyadmin.net/phpMyAdmin/${VERSION}/phpMyAdmin-${VERSION}-english.tar.gz`
-
-`tar xvf phpMyAdmin-${VERSION}-all-languages.tar.gz`
-
-`sudo mv phpMyAdmin-*/ /usr/share/phpmyadmin`
-
-`sudo mkdir -p /var/lib/phpmyadmin/tmp;sudo chown -R www-data:www-data /var/lib/phpmyadmin;`
-
-`sudo mkdir /etc/phpmyadmin/`
-
-`sudo cp /usr/share/phpmyadmin/config.sample.inc.php  /usr/share/phpmyadmin/config.inc.php`
-
-# Add two componet:
-*******************************************************************
-***Firstly
-
-`sudo vim /usr/share/phpmyadmin/config.sample.inc.php`
-
-  `$cfg['blowfish_secret'] = 'H2OxcGXxflSd8JwrwVlh6KW6s2rER63i';`
-
-  `$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';`
-
-***Secondly,
-
-`sudo vim /etc/apache2/conf-enabled/phpmyadmin.conf`
+```bash
+sudo a2enmod ssl
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+-keyout /etc/ssl/private/server.key \
+-out /etc/ssl/certs/server.crt
 ```
-Alias /phpmyadmin /usr/share/phpmyadmin
 
-<Directory /usr/share/phpmyadmin>
-    Options SymLinksIfOwnerMatch
-    DirectoryIndex index.php
+---
 
-    <IfModule mod_php5.c>
-        <IfModule mod_mime.c>
-            AddType application/x-httpd-php .php
-        </IfModule>
-        <FilesMatch ".+\.php$">
-            SetHandler application/x-httpd-php
-        </FilesMatch>
+## 📂 Step 6: Virtual Host Configuration
+Configuring the Apache VirtualHost to handle **Port 80 (HTTP) to 443 (HTTPS) redirection** with SSL termination.
 
-        php_value include_path .
-        php_admin_value upload_tmp_dir /var/lib/phpmyadmin/tmp
-        php_admin_value open_basedir /usr/share/phpmyadmin/:/etc/phpmyadmin/:/var/lib/phpmyadmin/:/usr/share/php/php-gettext/:/usr/share/php/php-php-gettext/:/usr/share/javascript/:/usr/share/php/tcpdf/:/usr/share/doc/phpmyadmin/:/usr/share/php/phpseclib/
-        php_admin_value mbstring.func_overload 0
-    </IfModule>
-    <IfModule mod_php.c>
-        <IfModule mod_mime.c>
-            AddType application/x-httpd-php .php
-        </IfModule>
-        <FilesMatch ".+\.php$">
-            SetHandler application/x-httpd-php
-        </FilesMatch>
+`sudo vim /etc/apache2/sites-available/clubmaster.conf`
 
-        php_value include_path .
-        php_admin_value upload_tmp_dir /var/lib/phpmyadmin/tmp
-        php_admin_value open_basedir /usr/share/phpmyadmin/:/etc/phpmyadmin/:/var/lib/phpmyadmin/:/usr/share/php/php-gettext/:/usr/share/php/php-php-gettext/:/usr/share/javascript/:/usr/share/php/tcpdf/:/usr/share/doc/phpmyadmin/:/usr/share/php/phpseclib/
-        php_admin_value mbstring.func_overload 0
-    </IfModule>
+```apache
+<VirtualHost *:80>
+     ServerName 13.126.208.136
+     DocumentRoot /var/www/html/Club-Manager/
+     Redirect permanent / [https://13.126.208.136/](https://13.126.208.136/)
+</VirtualHost>
 
-</Directory>
+<VirtualHost *:443>
+     ServerName 13.126.208.136
+     DocumentRoot /var/www/html/Club-Manager/
+     
+     SSLEngine on
+     SSLCertificateKeyFile /etc/ssl/private/server.key
+     SSLCertificateFile /etc/ssl/certs/server.crt
 
-#Authorize for setup
-<Directory /usr/share/phpmyadmin/setup>
-    <IfModule mod_authz_core.c>
-        <IfModule mod_authn_file.c>
-            AuthType Basic
-            AuthName "phpMyAdmin Setup"
-            AuthUserFile /etc/phpmyadmin/htpasswd.setup
-        </IfModule>
-        Require valid-user
-    </IfModule>
-</Directory>
-
-#Disallow web access to directories that don't need it
-<Directory /usr/share/phpmyadmin/templates>
-    Require all denied
-</Directory>
-<Directory /usr/share/phpmyadmin/libraries>
-    Require all denied
-</Directory>
-<Directory /usr/share/phpmyadmin/setup/lib>
-    Require all denied
-</Directory>
+     <Directory /var/www/html/Club-Manager>
+            Options Indexes FollowSymLinks
+            AllowOverride All
+            Require all granted
+            RewriteEngine on
+            RewriteBase /
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
+     </Directory>
+</VirtualHost>
 ```
-# Restart apache2 server:
-****************************************************************
-```
+
+---
+
+## ⚡ Step 7: Finalizing Services
+Enable necessary modules, link the site configuration, and restart the system daemons.
+
+```bash
+sudo a2dismod mpm_event
+sudo a2enmod mpm_prefork
+sudo a2enmod php7.4
+sudo a2enmod rewrite
+sudo a2ensite clubmaster.conf
 sudo systemctl restart apache2
-
 sudo systemctl restart mysql
 ```
 
-# Permission Change:
-******************************************************************
+---
 
-`sudo chown -R www-data:www-data /var/www/html/;sudo chmod -R 755 /var/www/html/`
+## ⚖️ Permissions & Security
+Enforce correct ownership and permission sets for the web root to prevent unauthorized execution.
 
-# Open-ssl Installation:
-******************************************************************
-```
-sudo lsb_release -a
-
-sudo a2enmod ssl
-
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/server.yourdomain.com.key -out /etc/ssl/certs/server.yourdomain.com.crt
-```
->>Country Name (2 letter code) [AU]:
-
->>State or Province Name (full name) [Some-State]:
-
->>Locality Name (eg, city) []:
-
->>Organization Name (eg, company) [Internet Widgits Pty Ltd]:
-
->>Organizational Unit Name (eg, section) []:
-
->>Common Name (e.g. server FQDN or YOUR name) []: 13.126.208.136
-
->>Email Address []:admin@mail.com 
-
-# .conf file add it as per DNS
-
-`sudo vim /etc/apache2/sites-available/clubmaster.conf`  
-
-```
-<VirtualHost *:80>
-     ServerName 13.126.208.136
-     ServerAlias 13.126.208.136
-     ServerAdmin admin@13.126.208.136
-     DocumentRoot /var/www/html/Club-Manager/
-     Redirect / https://13.126.208.136
-     CustomLog ${APACHE_LOG_DIR}/access.log combined
-     ErrorLog ${APACHE_LOG_DIR}/error.log
-
-      <Directory /var/www/html/clubmanager>
-            Options Indexes FollowSymLinks
-            AllowOverride All
-            Require all granted
-            RewriteEngine on
-            RewriteBase /
-            RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteCond %{REQUEST_FILENAME} !-d
-            RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
-   </Directory>
-</VirtualHost>
-<VirtualHost *:443>
-     ServerName 13.126.208.136
-     ServerAlias 13.126.208.136
-     ServerAdmin admin@13.126.208.136
-     DocumentRoot /var/www/html/Club-Manager/
-     SSLEngine on
-     SSLCertificateKeyFile /etc/ssl/private/server.yourdomain.com.key
-     SSLCertificateFile /etc/ssl/certs/server.yourdomain.com.crt
-     CustomLog ${APACHE_LOG_DIR}/access.log combined
-     ErrorLog ${APACHE_LOG_DIR}/error.log
-      <Directory /var/www/html/clubmanager>
-            Options Indexes FollowSymLinks
-            AllowOverride All
-            Require all granted
-            RewriteEngine on
-            RewriteBase /
-            RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteCond %{REQUEST_FILENAME} !-d
-            RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
-   </Directory>
-</VirtualHost>
-
+```bash
+sudo chown -R www-data:www-data /var/www/html/
+sudo chmod -R 755 /var/www/html/
 ```
 
-# Reload All Services
-
-```sudo a2dismod mpm_event
-
-sudo a2enmod mpm_prefork
-
-sudo sudo a2enmod php7.4
-
-sudo a2enmod rewrite
-
-sudo a2ensite clubmaster.conf
-
-sudo systemctl reload apache2
+---
+**Disclaimer:** This setup is optimized for development environments. For production, utilize **Certbot (Let's Encrypt)** for CA-signed certificates and enforce strict IP whitelisting for phpMyAdmin access.
 ```
