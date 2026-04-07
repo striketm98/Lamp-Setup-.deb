@@ -1,8 +1,3 @@
-If the images aren't rendering, it’s usually due to a syntax error in the badge URL or a caching issue on GitHub's side. To ensure they work 100% of the time, I have rebuilt the badges using the **latest Shields.io syntax** and organized them in a single row for better alignment.
-
-Here is the corrected, full `.md` content. Copy and paste this directly into your file:
-
-```markdown
 # 🌐 Enterprise LAMP Stack Deployment (Ubuntu 20.04 LTS)
 
 <p align="left">
